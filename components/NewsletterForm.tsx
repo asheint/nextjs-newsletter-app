@@ -5,6 +5,7 @@ import React, { FormEvent, useRef, useState } from 'react';
 import { gsap } from "gsap";
 import { getPlaneKeyframes } from "@/lib/getPlaneKeyframes";
 import { getTrailsKeyframes } from "@/lib/getTrailsKeyframes";
+import { POST } from "@/app/api/addSubscription/route";
 
 function NewsletterForm() {
   const [input, setInput] = useState("");
@@ -22,15 +23,24 @@ function NewsletterForm() {
     if (!active) {
       setActive(true);
 
-      //to gsap (GreenSock) animation
+      //to gsap (GreenSock) animation - animation for planes
       to(button, {
         keyframes: getPlaneKeyframes(set, fromTo, button, setActive, setInput),
       });
       
-      //to gsap animation
+      //to gsap animation - animation for trails
       to(button, { keyframes: getTrailsKeyframes(button) });
     }
-  }
+
+    //POST request to /API/addSubscription
+    await fetch('/api/addSubscription',{
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email }),
+    })
+  } 
 
   return (
     <div className="flex flex-col space-y-8 md:w-[400px]">
