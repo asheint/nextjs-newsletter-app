@@ -1,11 +1,10 @@
-'use client'
+'use client';
 
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import React, { FormEvent, useRef, useState } from 'react';
 import { gsap } from "gsap";
 import { getPlaneKeyframes } from "@/lib/getPlaneKeyframes";
 import { getTrailsKeyframes } from "@/lib/getTrailsKeyframes";
-import { POST } from "@/app/api/addSubscription/route";
 
 function NewsletterForm() {
   const [input, setInput] = useState("");
@@ -15,6 +14,7 @@ function NewsletterForm() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const email = input;
     const button = buttonRef.current;
 
@@ -23,24 +23,26 @@ function NewsletterForm() {
     if (!active) {
       setActive(true);
 
-      //to gsap (GreenSock) animation - animation for planes
+      // GSAP animations for planes
       to(button, {
         keyframes: getPlaneKeyframes(set, fromTo, button, setActive, setInput),
       });
-      
-      //to gsap animation - animation for trails
+
+      // GSAP animations for trails
       to(button, { keyframes: getTrailsKeyframes(button) });
     }
 
-    //POST request to /API/addSubscription
-    await fetch('/api/addSubscription',{
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
+    // POST request to /api/addSubscription
+    const res = await fetch("/api/addSubscription", {
       body: JSON.stringify({ email }),
-    })
-  } 
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+    const data = await res.json();
+
+    console.log(data)
+
+  };
 
   return (
     <div className="flex flex-col space-y-8 md:w-[400px]">
@@ -48,16 +50,15 @@ function NewsletterForm() {
         <div className="group flex items-center gap-x-4 py-1 pl-4 pr-1 rounded-[9px] bg-[#090D11] hover:bg-[#15141B] shadow-outline-gray hover:shadow-transparent focus-within:bg-[#15141B] focus-within:!shadow-outline-gray-focus transition-all duration-300">
           <EnvelopeIcon className="hidden sm:inline w-6 h-6 text-[#4B4C52] group-focus-within:text-white group-hover:text-white transition-colors duration-300"/>
           <input 
-          value={input} 
-          onChange={e => setInput(e.target.value)} 
-          type='email' 
-          placeholder='Email address'
-          required
-          className="flex-1 text-white text-sm sm:text-base outline-none placeholder-[#4B4C52] group-focus-within:placeholder-white bg-transparent placeholder:transition-colors placeholder:duration-300"
+            value={input} 
+            onChange={e => setInput(e.target.value)} 
+            type='email' 
+            placeholder='Email address'
+            required
+            className="flex-1 text-white text-sm sm:text-base outline-none placeholder-[#4B4C52] group-focus-within:placeholder-white bg-transparent placeholder:transition-colors placeholder:duration-300"
           />
           <button
             ref={buttonRef}
-            
             disabled={!input}
             type="submit"
             className={`${
@@ -83,8 +84,7 @@ function NewsletterForm() {
         </div>
       </form>
     </div>
-  )
-} 
-
+  );
+}
 
 export default NewsletterForm;
