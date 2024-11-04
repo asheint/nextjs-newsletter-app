@@ -10,7 +10,7 @@ export const socials = [
     {
       id: 2,
       name: "LinkedIn",
-      url: "https://linkedin.com/asheint",
+      url: "https://www.linkedin.com/in/asheint/",
       handle: "asheint",
     },
   ];
