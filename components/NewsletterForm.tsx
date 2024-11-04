@@ -135,8 +135,8 @@ function NewsletterForm() {
             />
           </div>
         )}
-
       </div>
+      
     </div>
   );
 }
